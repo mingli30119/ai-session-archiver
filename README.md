@@ -213,10 +213,6 @@ A: 查看 [CONTRIBUTING.md](CONTRIBUTING.md) 中的 Adapter 开发指南。
 
 [MIT License](LICENSE)
 
-## 致谢
-
-感谢所有 AI 编程工具的开发者，让编程变得更高效。
-
 ---
 
 **如果这个工具对你有帮助，请给个 ⭐️ Star！**
