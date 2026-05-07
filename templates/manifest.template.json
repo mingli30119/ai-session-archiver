@@ -1,0 +1,26 @@
+{
+  "stable_key": "<tool>::<project|_>::<session_id>",
+  "tool": "<tool id, e.g. cursor / claude-code / codex / cline-vscode>",
+  "project": "<workspace name or null>",
+  "session_id": "<uuid or timestamp>",
+  "started_at": "<ISO8601 UTC, optional>",
+  "last_activity": "<ISO8601 UTC>",
+  "source_paths": ["<absolute path to original file 1>", "<...>"],
+  "archive_path": "<absolute path to archived JSONL>",
+  "archive_path_rel": "<path relative to vault>",
+  "total_source_size": 0,
+  "stats": {
+    "total_events": 0,
+    "archive_size": 0,
+    "files": [
+      {
+        "path": "<source path>",
+        "role": "main | subagent | meta | api | ui | history | extra",
+        "size": 0,
+        "events": 0,
+        "format": "jsonl | json | sqlite-keys | raw-text"
+      }
+    ]
+  },
+  "archived_at": "<ISO8601 UTC>"
+}

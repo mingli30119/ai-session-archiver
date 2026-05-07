@@ -1,0 +1,61 @@
+# AI Session Archiver 配置文件示例
+#
+# 复制此文件为 config.toml 并根据你的环境修改路径
+#
+# 用法：
+#   python scripts/archive_sessions.py --config config.toml scan
+#   python scripts/archive_sessions.py --config config.toml --apply export
+
+[vault]
+# 归档输出目录（默认：~/ai-session-archive）
+# Windows 示例: "C:/Users/YOUR_USERNAME/ai-session-archive"
+# macOS/Linux 示例: "~/ai-session-archive"
+path = "~/ai-session-archive"
+
+[paths]
+# 各工具的存储路径（可选，不配置则使用默认路径）
+# 只有当你的路径不是默认位置时才需要配置
+
+# Claude Code 项目目录（默认：~/.claude/projects）
+# claude_projects = "~/.claude/projects"
+
+# Claude Code 全局会话（默认：~/.claude/sessions 和 ~/.claude/history.jsonl）
+# claude_sessions = "~/.claude/sessions"
+# claude_history = "~/.claude/history.jsonl"
+
+# Codex CLI 会话目录（默认：~/.codex/sessions）
+# codex_sessions = "~/.codex/sessions"
+
+# Cursor IDE 项目目录（默认：~/.cursor/projects）
+# cursor_projects = "~/.cursor/projects"
+
+# Cursor IDE 全局状态数据库
+# Windows 默认：%APPDATA%/Cursor/User/globalStorage/state.vscdb
+# macOS 默认：~/Library/Application Support/Cursor/User/globalStorage/state.vscdb
+# cursor_db = ""
+
+# Cline VSCode 任务目录
+# Windows 默认：%APPDATA%/Code/User/globalStorage/saoudrizwan.claude-dev/tasks
+# macOS 默认：~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/tasks
+# cline_tasks = ""
+
+[archive]
+# 归档选项
+
+# 默认保留天数（用于 --older-than，默认：15）
+default_older_than = 15
+
+# 是否清理 IDE 标签噪音（<ide_opened_file> 等）（未来功能）
+clean_ide_tags = true
+
+# 归档格式（jsonl 或 json）
+format = "jsonl"
+
+[prune]
+# 清理选项
+
+# 是否允许删除未归档的会话（危险，默认：false）
+allow_unarchived = false
+
+# 默认保留天数（默认：15）
+default_older_than = 15
