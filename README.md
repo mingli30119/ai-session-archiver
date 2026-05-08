@@ -1,13 +1,19 @@
 # AI Session Archiver
 
-> 跨工具扫描、统一归档、定期清理本地 AI 对话记录
+> 你的 AI 协作知识库 — 跨工具归档、跨会话查看、自我蒸馏的基础设施
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
 ## 为什么需要这个工具？
 
-如果你使用多个 AI 编程助手（Claude Code、Cursor、Codex、GitHub Copilot 等），你的对话记录会分散在不同的目录下，持续膨胀，占用大量磁盘空间。这些对话记录是宝贵的知识资产——包含决策过程、调试思路、验证过的方案——但缺乏统一的管理方式。
+如果你使用多个 AI 编程助手（Claude Code、Cursor、Codex、GitHub Copilot 等），你的对话记录会分散在不同的目录下，持续膨胀，占用大量磁盘空间。这些对话记录是**宝贵的知识资产**——包含决策过程、调试思路、验证过的方案——但缺乏统一的管理方式。
+
+更重要的是，这些对话记录是**你的个人知识库**：
+- 💡 每次调试都是一次学习，但如果不记录就会遗忘
+- 🔄 相似问题会反复出现，但你可能想不起上次怎么解决的
+- 📈 你的思维方式和工作模式都隐藏在这些对话中
+- 🎯 这是构建个人AI助手、提炼方法论的第一手素材
 
 **AI Session Archiver** 让你能够：
 - 📦 **统一归档**：将所有工具的对话记录导出为标准 JSONL 格式
@@ -15,6 +21,28 @@
 - 🧹 **安全清理**：删除已归档的旧对话，释放磁盘空间
 - 🔒 **幂等执行**：重复运行不会重复归档，支持定期任务
 - 🛡️ **安全优先**：默认 dry-run，保护性删除，不会误删重要文件
+
+## 核心价值
+
+### 📚 跨会话知识管理
+- 统一格式的JSONL让你可以跨工具、跨时间检索所有对话
+- 完整保留thinking/reasoning，不只是最终答案
+- 支持按项目、时间、工具维度查看历史决策
+
+### 🧠 自我蒸馏与方法论提炼
+- 每个会话都是一次问题解决过程的完整记录
+- 可以回溯"为什么当时选择这个方案"
+- 提炼出可复用的调试思路、架构决策、验证方法
+
+### 🔍 决策回溯与复盘
+- 当项目出问题时，快速定位"当时是怎么讨论的"
+- 对比不同时期对同一问题的处理方式
+- 识别重复出现的问题模式
+
+### 💾 个人AI助手的训练数据
+- 这些对话是你独特的工作方式和思维模式
+- 可以用于训练/微调个人化的AI助手
+- 构建符合你工作习惯的知识图谱
 
 ## 支持的工具
 
@@ -103,6 +131,68 @@ python scripts/archive_sessions.py --config config.toml --apply prune --older-th
 ```bash
 # 扫描 + 归档 + 清理
 python scripts/archive_sessions.py --config config.toml --apply run --older-than 15
+```
+
+## 典型使用场景
+
+### 场景1：项目复盘
+某个功能上线后出现bug，你想回顾当时的设计决策：
+```bash
+# 找到该项目的所有会话
+grep -r "project-name" ~/ai-session-archive/
+
+# 查看具体会话中的reasoning过程
+jq 'select(.type=="assistant" and .thinking)' session.jsonl
+```
+
+### 场景2：方法论提炼
+你发现自己在多个项目中用类似方法解决了某类问题：
+```bash
+# 搜索所有包含"性能优化"的会话
+grep -l "性能优化" ~/ai-session-archive/**/*.jsonl
+
+# 提取所有相关的工具调用和结果
+jq 'select(.type=="tool_use" or .type=="tool_result")' *.jsonl
+```
+
+### 场景3：跨工具协作历史
+你在Cursor写代码，在Claude Code做架构设计，在Codex做实验：
+```bash
+# 按时间线查看所有工具的对话
+ls -lt ~/ai-session-archive/**/2026-04/*.jsonl
+
+# 合并查看某个时间段的所有活动
+cat ~/ai-session-archive/**/2026-04/*.jsonl | jq -s 'sort_by(.timestamp)'
+```
+
+## 进阶用法
+
+### 构建个人知识图谱
+```python
+# 提取所有会话中的关键决策点
+import json
+decisions = []
+for line in open('session.jsonl'):
+    event = json.loads(line)
+    if 'thinking' in event and '决定' in event['thinking']:
+        decisions.append(event)
+```
+
+### 训练个人AI助手
+```bash
+# 导出所有用户输入和AI响应对
+jq -r 'select(.type=="user" or .type=="assistant") | 
+       {role: .type, content: .content}' *.jsonl > training_data.jsonl
+```
+
+### 生成工作报告
+```bash
+# 统计本月的AI协作活动
+find ~/ai-session-archive -name "2026-05*.jsonl" | wc -l
+
+# 提取本月解决的主要问题
+jq -r 'select(._archive_meta) | ._archive_meta.project' \
+   ~/ai-session-archive/**/2026-05/*.jsonl | sort | uniq -c
 ```
 
 ## 核心特性
